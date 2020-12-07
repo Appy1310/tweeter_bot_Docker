@@ -18,8 +18,8 @@ load_dotenv()
 
 # OAuth 2 - APP only - read-only access to public information.
 auth = tweepy.OAuthHandler(
-    consumer_key = os.getenv('api_key'), 
-    consumer_secret = os.getenv('api_secret_key')
+    consumer_key=os.getenv('api_key'),
+    consumer_secret=os.getenv('api_secret_key')
 )
 # OAuth 1 - User - access user information, post tweets and connect to twitter stream
 # auth.set_access_token(os.getenv('access_token'), os.getenv('access_token_secret'))
@@ -37,51 +37,45 @@ api = tweepy.API(auth)
 
 
 cursor = tweepy.Cursor(
-    api.search, 
+    api.search,
     q='"Donald Trump" or "Joe Biden"',
     #result_type = 'popular',
     tweet_mode='extended',
-    count =2000
+    count=2000
 )
 
 
 # In[19]:
 
 
-twitter_text=[]
+twitter_text = []
 
 for status in cursor.items(1000):
-    twitter_temp={}
-    twitter_temp['user_name']= status.author.name
-    twitter_temp['user_id']= status.author.screen_name
-    twitter_temp['location']= status.author.location
+    twitter_temp = {}
+    twitter_temp['user_name'] = status.author.name
+    twitter_temp['user_id'] = status.author.screen_name
+    twitter_temp['location'] = status.author.location
     twitter_temp['time'] = status.created_at
-    twitter_temp['followers_count']= status.author.followers_count
+    twitter_temp['followers_count'] = status.author.followers_count
     twitter_temp['friends_count'] = status.author.friends_count
-    twitter_temp['retweet_count'] = status.retweet_count    
+    twitter_temp['retweet_count'] = status.retweet_count
     try:
-        twitter_temp['twitter_text']= status.retweeted_status.full_text
+        twitter_temp['twitter_text'] = status.retweeted_status.full_text
     except AttributeError:  # Not a Retweet
-        twitter_temp['twitter_text']=status.full_text
-    
-    twitter_temp['user_profile_image_url']=status.author.profile_image_url
+        twitter_temp['twitter_text'] = status.full_text
 
-    
+    twitter_temp['user_profile_image_url'] = status.author.profile_image_url
+
     twitter_text.append(twitter_temp)
-        
-   
 
 
 # In[20]:
 
 
-#twitter_text
+# twitter_text
 
 
 # In[8]:
-
-
-
 
 
 # # Adding the data to a MongoDb database
@@ -104,4 +98,3 @@ mydb = client.tweet_collector
 
 
 mydb.mycol.insert_many(twitter_text)
-
