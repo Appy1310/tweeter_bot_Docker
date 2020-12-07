@@ -1,0 +1,38 @@
+version: '3'
+services:
+  tweet_collector:
+    build: tweet_collector/
+    volumes:
+    - ./tweet_collector/src:/app
+    depends_on:
+    - mongodb
+  etl_job:
+      build: etl_job/
+      volumes:
+        - ./etl_job/src:/app
+      depends_on: 
+        - mongodb
+        - my_postgresdb 
+  slackbot:
+    build: slackbot/
+    volumes:
+      - ./slackbot/src:/app
+    depends_on: 
+      - my_postgresdb       
+  mongodb:
+    image: mongo
+    ports:
+    - 27017:27017  
+  my_postgresdb:
+      image: postgres
+      restart: always
+      ports:
+        - 5434:5432
+      environment:
+        POSTGRES_PASSWORD: titanic
+        POSTGRES_USER: postgres
+        POSTGRES_DB: twitterdb
+  
+
+      
+    

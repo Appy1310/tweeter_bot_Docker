@@ -1,0 +1,8 @@
+pandas
+seaborn
+requests
+python-dotenv
+sqlalchemy
+sqlalchemy-utils
+psycopg2-binary
+

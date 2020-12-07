@@ -1,0 +1,6 @@
+
+pandas
+seaborn
+tweepy
+python-dotenv
+pymongo
